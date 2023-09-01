@@ -6,3 +6,4 @@ This is the official PyTorch Implementation of [**"CheXFusion: Effective Fusion 
 
 Paper published in ICCV proceedings with oral presentation.
 
+![Imgur](https://i.imgur.com/wsC9vQP.png)
