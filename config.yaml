@@ -1,0 +1,184 @@
+seed_everything: 42
+trainer:
+  accelerator: auto
+  strategy: auto
+  devices: auto
+  num_nodes: 1
+  precision: 16-mixed
+  logger: 
+    - class_path: lightning.pytorch.loggers.NeptuneLogger
+      init_args:
+        project: dongkyuk/CXR
+        api_key: eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIxOWY4YTFhZS00NGU5LTQxOTUtOGI5NC04ZjgwOTJkMDFmNjYifQ==    
+        name: 384, tiny, baseline
+        log_model_checkpoints: false
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        dirpath: save/transformer-fusion-padding-segembedding
+        filename: '{epoch:02d}-{val_loss:.4f}-{val_ap:.5f}'
+        save_top_k: 10
+        monitor: val_loss
+        mode: min
+    # - class_path: callbacks.submit_callback.SubmissonWriter
+    #   init_args:
+    #       write_interval: epoch
+    #       sample_submission_path: data/sample_submission.csv
+    #       submission_path: save/submission.csv        
+    #       submission_zip_path: save/submission.zip
+    #       submission_code_dir: data/code      
+    #       pred_df_path: data/development.csv  
+    - class_path: callbacks.fusion_submit_callback.FusionSubmissonWriter
+      init_args:
+          write_interval: epoch
+          sample_submission_path: data/sample_submission.csv
+          submission_path: save/submission.csv        
+          submission_zip_path: save/submission.zip
+          submission_code_dir: data/code      
+          pred_df_path: data/development.csv  
+    # - class_path: callbacks.vinbig_pseudo_callback.VinBigWriter
+    #   init_args:
+    #       write_interval: epoch
+    #       vinbig_train_df_path: data/vinbig/train_processed.csv
+    #       vinbig_pseudo_train_df_path: data/vinbig/train_processed_pseudo_labeled.csv
+    # - class_path: callbacks.nih_pseudo_callback.NihWriter 
+    #   init_args:
+    #       write_interval: epoch
+    #       nih_train_df_path: data/nih/train_processed.csv
+    #       nih_pseudo_train_df_path: data/nih/train_processed_pseudo_labeled.csv
+    # - class_path: callbacks.chexpert_pseudo_callback.ChexpertWriter 
+    #   init_args:
+    #       write_interval: epoch
+    #       chexpert_train_df_path: data/chexpert/train_processed.csv
+    #       chexpert_pseudo_train_df_path: data/chexpert/train_processed_pseudo_labeled.csv
+    # - class_path: lightning.pytorch.callbacks.StochasticWeightAveraging
+    #   init_args:
+    #     swa_lrs: 1e-2
+    # - class_path: lightning.pytorch.callbacks.early_stopping.EarlyStopping
+    #   init_args:
+    #     monitor: val_ap
+    #     mode: max
+    #     patience: 10
+  fast_dev_run: false
+  overfit_batches: 0.0
+  val_check_interval: 0.25
+  num_sanity_val_steps: 2
+  accumulate_grad_batches: 1
+  gradient_clip_val: null 
+  deterministic: null
+  benchmark: true
+  max_epochs: 1000
+model:
+  lr: 3e-5
+  classes: 
+  - Atelectasis
+  - Calcification of the Aorta
+  - Cardiomegaly
+  - Consolidation
+  - Edema
+  - Emphysema
+  - Enlarged Cardiomediastinum
+  - Fibrosis
+  - Fracture
+  - Hernia
+  - Infiltration
+  - Lung Lesion
+  - Lung Opacity
+  - Mass
+  - No Finding
+  - Nodule
+  - Pleural Effusion
+  - Pleural Other
+  - Pleural Thickening
+  - Pneumomediastinum
+  - Pneumonia
+  - Pneumoperitoneum
+  - Pneumothorax
+  - Subcutaneous Emphysema
+  - Support Devices
+  - Tortuous Aorta
+  loss_init_args:
+    type: asl
+    class_instance_nums:
+      - 67597
+      - 4361
+      - 76900
+      - 16038
+      - 38574
+      - 4255
+      - 30119
+      - 1158
+      - 11883
+      - 4049
+      - 10218
+      - 2533
+      - 79931
+      - 5529
+      - 41869
+      - 7663
+      - 69240
+      - 675
+      - 3369
+      - 788
+      - 48093
+      - 543
+      - 14983
+      - 2453
+      - 89140
+      - 3499
+    total_instance_num: 264849
+  timm_init_args:
+    num_classes: 26
+    model_name: convnext_small.fb_in22k_ft_in1k
+    pretrained: true
+data:
+  dataloader_init_args:
+    batch_size: 8
+    num_workers: 8            
+    pin_memory: true
+    persistent_workers: true
+  datamodule_cfg: 
+    predict_pseudo_label: null #chexpert
+    use_pseudo_label: false #true
+    data_dir: data
+    train_df_path: data/train.csv
+    pred_df_path: data/development.csv
+    vinbig_train_df_path: data/vinbig/train_processed.csv
+    vinbig_pseudo_train_df_path: data/vinbig/train_processed_pseudo_labeled.csv
+    nih_train_df_path: data/nih/train_processed.csv
+    nih_pseudo_train_df_path: data/nih/train_processed_pseudo_labeled.csv
+    chexpert_train_df_path: data/chexpert/train_processed.csv
+    chexpert_pseudo_train_df_path: data/chexpert/train_processed_pseudo_labeled.csv
+    save_dir: save
+    val_split: 0.1
+    seed: 42
+    size: 1024
+    classes: 
+      - Atelectasis
+      - Calcification of the Aorta
+      - Cardiomegaly
+      - Consolidation
+      - Edema
+      - Emphysema
+      - Enlarged Cardiomediastinum
+      - Fibrosis
+      - Fracture
+      - Hernia
+      - Infiltration
+      - Lung Lesion
+      - Lung Opacity
+      - Mass
+      - No Finding
+      - Nodule
+      - Pleural Effusion
+      - Pleural Other
+      - Pleural Thickening
+      - Pneumomediastinum
+      - Pneumonia
+      - Pneumoperitoneum
+      - Pneumothorax
+      - Subcutaneous Emphysema
+      - Support Devices
+      - Tortuous Aorta
+
+ckpt_path: /home/paperspace/Desktop/CXR-LT/save/transformer-fusion-padding-segembedding/epoch=07-val_loss=0.0600-val_ap=0.36752.ckpt #/home/paperspace/Desktop/CXR-LT/save/transformer-fusion-padding-segembedding/epoch=06-val_loss=0.0600-val_ap=0.36612.ckpt #/home/paperspace/Desktop/CXR-LT/save/transformer-fusion-new/epoch=04-val_loss=0.0601-val_ap=0.36637.ckpt #/home/paperspace/Desktop/CXR-LT/save/pseudo-all-recent/epoch=05-val_loss=0.0594-val_ap=0.36696.ckpt #/home/paperspace/Desktop/CXR-LT/save/pseudo-all/epoch=06-val_loss=0.0597-val_ap=0.36819.ckpt #null #/home/paperspace/Desktop/CXR-LT/save/asl-mldecoder/epoch=06-val_loss=0.0600-val_ap=0.35800.ckpt #

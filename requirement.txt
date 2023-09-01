@@ -1,0 +1,9 @@
+lightning
+pytorch-lightning[extra]
+timm
+jpeg4py
+albumentations
+iterative-stratification
+ffcv
+neptune-client
+positional-encodings[pytorch]
