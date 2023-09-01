@@ -10,6 +10,6 @@ Paper published in ICCV proceedings with oral presentation.
 
 ## Results
 
-ChexFusion showed 1st place results in all metrics
+ChexFusion showed 1st place results in all metrics. [Public Leaderboard](https://codalab.lisn.upsaclay.fr/competitions/12599#results)
 
 ![Imgur](https://imgur.com/fRv7HoF.png)
