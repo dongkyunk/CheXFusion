@@ -12,4 +12,4 @@ Paper published in ICCV proceedings with oral presentation.
 
 ChexFusion showed 1st place results in all metrics
 
-![Imgur](https://imgur.com/VGy7LCs)
+![Imgur](https://imgur.com/fRv7HoF.png)
