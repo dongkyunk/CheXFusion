@@ -9,7 +9,6 @@ trainer:
     - class_path: lightning.pytorch.loggers.NeptuneLogger
       init_args:
         project: dongkyuk/CXR
-        api_key: eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiIxOWY4YTFhZS00NGU5LTQxOTUtOGI5NC04ZjgwOTJkMDFmNjYifQ==    
         name: 384, tiny, baseline
         log_model_checkpoints: false
   callbacks:
