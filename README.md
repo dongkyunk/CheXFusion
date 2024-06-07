@@ -15,6 +15,13 @@ Paper published in ICCV proceedings with oral presentation.
 
 ![Imgur](https://i.imgur.com/wsC9vQP.png)
 
+### Update June 7:
+
+A co-authored [paper](https://www.sciencedirect.com/science/article/pii/S136184152400149X) discussing the challenge was published in Medical Image Analysis!
+
+ChexFusion remained 1st place, considerably outperforming other teams, even under various distribution shifts.
+
+
 ## Results
 
 ChexFusion showed 1st place results in all metrics. [Public Leaderboard](https://codalab.lisn.upsaclay.fr/competitions/12599#results)
